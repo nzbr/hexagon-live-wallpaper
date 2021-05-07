@@ -1,0 +1,14 @@
+<div class="background-container" #container>
+  <app-glow [top]='mouseY' [left]='mouseX' color="#00ff00" class="shimmer" [diameter]='200'></app-glow>
+<!--  <app-glow [top]='revMouseY' [left]='revMouseX' color="#1ab411" [diameter]="175"></app-glow>-->
+  <ng-container *ngFor="let glow of glows">
+    <app-glow [top]="glow.top$" [left]="glow.left$" [color]="glow.color" [diameter]="glow.diameter" class="shimmer"></app-glow>
+  </ng-container>
+  <div class="hexagon-grid">
+    <div class="row" *ngFor="let i of hexagonRows | async">
+      <div class="hexagon-wrapper" *ngFor="let i of hexagonCols | async">
+        <div class="hexagon"></div>
+      </div>
+    </div>
+  </div>
+</div>

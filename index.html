@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hexagon Wallpaper</title>
+    <style type="text/css">
+        body {
+            background-color: black;
+        }
+
+        .background-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #box-shadow-div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background-color: lime;
+            border-radius: 100%;
+            box-shadow: 0 0 10px 10px black;
+            filter: blur(50px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="box-shadow-div"></div>
+    </div>
+
+    <script type="application/javascript">
+        (function () {
+            const shadowDiv = document.getElementById('box-shadow-div');
+
+            let x, y;
+
+            window.addEventListener('mouseover', function(event) {
+                x = event.clientX;
+                y = event.clientY;
+
+                if (typeof x !== 'undefined') {
+                    shadowDiv.style.left = x - shadowDiv.clientWidth/2 + 'px';
+                    shadowDiv.style.top = y - shadowDiv.clientWidth/2 + 'px';
+                }
+            }, false);
+        })();
+    </script>
+</body>
+</html>
