@@ -20,7 +20,7 @@ export class GlowData {
     this.top$ = new Subject<number>();
     this.angle$ = new Subject<number>();
 
-    this.color = `hsl(${Math.random()*360}, 100%, 50%)`;
+    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
     this.diameter = 300 * GlowData.rand_bm();
 
     this.angle = Math.PI / 4;
@@ -33,7 +33,7 @@ export class GlowData {
   }
 
   public isOutOfBounds(width: number, height: number): boolean {
-    const allowedArea = this.diameter * 2;
+    const allowedArea = this.diameter * 3;
     return (
       this.left < (-allowedArea)
       || this.left > (width + allowedArea)
@@ -57,30 +57,46 @@ export class GlowData {
   }
 
   private setStartPosition() {
-    this.angle = Math.random() * 2 * Math.PI;
-    if (this.angle % Math.PI === 0) {
-      this.angle += 0.0000001
-    } // Work around dividing by zero
-    const alpha = (this.angle - Math.PI >= 0) ? this.angle - Math.PI : this.angle + Math.PI;
-
-    const v = {x: Math.cos(alpha), y: Math.sin(alpha)};
     const h = window.innerHeight;
     const w = window.innerWidth;
 
     const mx = w / 2;
     const my = h / 2;
 
-    const dTop = -my / v.y;
-    const dLeft = -mx / v.x;
-    const dBottom = -dTop;
-    const dRight = -dLeft;
+    const screenCircumference = 2 * h + 2 * w;
+    const startPos = Math.random() * screenCircumference;
 
-    const vFactor = Math.min(...[dTop, dLeft, dBottom, dRight].filter(it => it >= 0));
+    if (startPos < w) {
+      this.left = startPos;
+      this.top = 0;
+    } else if (startPos < (w + h)) {
+      this.left = w;
+      this.top = startPos - w;
+    } else if (startPos < (2 * w + h)) {
+      this.left = startPos - (w + h);
+      this.top = h;
+    } else {
+      this.left = 0;
+      this.top = startPos - (2 * w + h);
+    }
 
-    this.left = mx + v.x * (vFactor + this.diameter);
-    this.top = my + v.y * (vFactor + this.diameter);
-    console.log(this.left);
-    console.log(this.top);
+    let v = {
+      x: mx - this.left,
+      y: my - this.top
+    };
+    const lv = Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+    v = {
+      x: v.x / lv,
+      y: v.y / lv
+    };
+
+    this.left -= v.x * this.diameter * 2;
+    this.top -= v.y * this.diameter * 2;
+
+    this.angle = Math.acos(
+      v.x /
+      (Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2)))
+    ) * ((v.y < 0) ? -1 : 1);
   }
 
   private static toRadians(degree: number): number {

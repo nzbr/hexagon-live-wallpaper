@@ -79,17 +79,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private animateFrame() {
     this.glows.forEach((glow) => glow.doMovement());
-    this.glows.forEach((it) => {
-      if (it.isOutOfBounds(this.width.value, this.height.value)) {
-        console.log(it)
-      }
-    })
     this.glows = this.glows.filter((it) => !it.isOutOfBounds(this.width.value, this.height.value));
 
     const pixels = window.innerWidth * window.innerHeight;
     const allowedGlows = pixels / 500000;
     if (allowedGlows > this.glows.length) {
-      if (GlowData.rand_bm() > .7) {
+      if (GlowData.rand_bm() > .725) {
         this.glows.push(new GlowData());
       }
     }
